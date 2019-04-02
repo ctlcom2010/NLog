@@ -13,8 +13,12 @@ namespace NLog.UnitTests.Mocks
     {
         public Uri RequestedAddress { get; set; }
 
-        public MemoryStream WrittenStream = new MemoryStream();
+        public MemoryStream WrittenStream = new ManualMemoryStream();
 
+        /// <inheritdoc />
+        public WebRequestMock()
+        {
+        }
 
 
         #region Overrides of WebRequest
@@ -77,12 +81,25 @@ namespace NLog.UnitTests.Mocks
 
         public string GetRequestContentAsString()
         {
-            return System.Text.Encoding.UTF8.GetString(WrittenStream.ToArray());
+            var array = WrittenStream.ToArray();
+            var s = System.Text.Encoding.UTF8.GetString(array);
+            return s;
         }
         public string GetResponseContentAsString()
         {
             return "todo";
             //return System.Text.Encoding.UTF8.GetString(_responseStream.ToArray());
+        }
+    }
+
+    public sealed class ManualMemoryStream : MemoryStream
+    {
+        protected override void Dispose(bool disposing)
+        {
+        }
+        public void ManualDispose()
+        {
+            base.Dispose(true);
         }
     }
 

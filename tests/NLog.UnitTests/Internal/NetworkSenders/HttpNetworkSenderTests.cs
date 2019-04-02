@@ -35,7 +35,7 @@ namespace NLog.UnitTests.Internal.NetworkSenders
             var mock = senderFactoryWithHttpMocks.WebRequestMock;
             var s = mock.GetRequestContentAsString();
             var s2 = mock.GetResponseContentAsString();
-         //   var s3 = mock.GetResponse();
+            //   var s3 = mock.GetResponse();
 
 
             Assert.Equal("http://test.with.mock", mock.RequestedAddress.ToString());
@@ -57,7 +57,7 @@ namespace NLog.UnitTests.Internal.NetworkSenders
             };
         }
 
-        public WebRequestMock WebRequestMock => new WebRequestMock();
+        public WebRequestMock WebRequestMock { get; } = new WebRequestMock();
 
         #endregion
     }
