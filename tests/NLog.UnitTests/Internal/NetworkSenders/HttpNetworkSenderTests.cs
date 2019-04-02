@@ -15,8 +15,11 @@ namespace NLog.UnitTests.Internal.NetworkSenders
         public void HttpHappyPathTest()
         {
             // Arrange
-            var networkTarget = new NetworkTarget("target1");
-            networkTarget.Address = "http://test.with.mock";
+            var networkTarget = new NetworkTarget("target1")
+            {
+                Address = "http://test.with.mock",
+                Layout = "${logger}|${message}|${exception}"
+            };
             var senderFactoryWithHttpMocks = new SenderFactoryWithHttpMocks();
             networkTarget.SenderFactory = senderFactoryWithHttpMocks;
 
@@ -33,12 +36,10 @@ namespace NLog.UnitTests.Internal.NetworkSenders
 
             // Assert
             var mock = senderFactoryWithHttpMocks.WebRequestMock;
-            var s = mock.GetRequestContentAsString();
-            var s2 = mock.GetResponseContentAsString();
-            //   var s3 = mock.GetResponse();
+            var requestedString = mock.GetRequestContentAsString();
 
-
-            Assert.Equal("http://test.with.mock", mock.RequestedAddress.ToString());
+            Assert.Equal("http://test.with.mock/", mock.RequestedAddress.ToString());
+            Assert.Equal("HttpHappyPathTestLogger|test message1|",requestedString);
 
         }
 
